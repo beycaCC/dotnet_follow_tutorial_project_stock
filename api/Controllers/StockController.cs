@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using api.Data;
 using api.Dtos.Stock;
+using api.Helpers;
 using api.Interfaces;
 using api.Mappers;
 using api.Models;
@@ -26,14 +27,14 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<IActionResult> GetAll([FromQuery] QueryObject query)
         {
             if (!ModelState.IsValid) 
                 return BadRequest(ModelState);
 
             // ToList() method is makiing sure that the stuff returned is not db itself
             // Without ToList(), _context.Stock is returning the database itself.
-            var stocks = await _stockRepo.GetAllAsync();
+            var stocks = await _stockRepo.GetAllAsync(query);
             var stockDto = stocks.Select(s => s.ToStockDto());  // .Select is .Net version of map
                                             // Here is going to return an immutable array or any immutable list of this two stock dtos
 
@@ -98,7 +99,7 @@ namespace api.Controllers
         {
             if (!ModelState.IsValid) 
                 return BadRequest(ModelState);
-                
+
             var stockModel = await _stockRepo.DeleteAsync(id);
             if (stockModel == null) 
             {
