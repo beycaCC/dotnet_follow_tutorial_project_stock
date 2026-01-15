@@ -49,6 +49,7 @@ namespace api.Repository
             // Adding `.Include(c => c.Comments)` will connect Comments with Stocks in Json returned from API call
             var stocks = _context.Stock.Include(c => c.Comments).AsQueryable();
 
+            // Filtering
             if (!string.IsNullOrWhiteSpace(query.CompanyName))
             {
                 stocks = stocks.Where(s => s.CompanyName.Contains(query.CompanyName));
@@ -57,6 +58,15 @@ namespace api.Repository
             if (!string.IsNullOrWhiteSpace(query.Symbol))
             {
                 stocks = stocks.Where(s => s.Symbol.Contains(query.Symbol));
+            }
+
+            // Sort By
+            if (!string.IsNullOrEmpty(query.SortBy))
+            {
+                if (query.SortBy.Equals("Symbol", StringComparison.OrdinalIgnoreCase))
+                {
+                    stocks = query.isDecending ? stocks.OrderByDescending(s => s.Symbol) : stocks.OrderBy(s => s.Symbol);
+                }
             }
 
             return await stocks.ToListAsync();

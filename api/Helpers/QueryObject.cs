@@ -9,5 +9,7 @@ namespace api.Helpers
     {
         public String? Symbol { get; set; } = null;
         public String? CompanyName { get; set; } = null;
+        public String? SortBy { get; set; } = null;
+        public bool isDecending { get; set; } = false;
     }
 }
