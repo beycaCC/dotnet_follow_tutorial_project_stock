@@ -1,0 +1,82 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using api.Data;
+using api.Dtos.Stock;
+using api.Interfaces;
+using api.Models;
+using Microsoft.EntityFrameworkCore;
+
+namespace api.Repository
+{
+    // This class handls all db calls and help cleaned up the controller class
+    public class StockRepository : IStockRepository
+    {
+        private readonly ApplicationDBContext _context;
+
+        public StockRepository(ApplicationDBContext context)
+        {
+            _context = context; 
+        }
+
+        public async Task<Stock> CreateAsync(Stock stockModel)
+        {
+            await _context.Stock.AddAsync(stockModel);
+            await _context.SaveChangesAsync();
+
+            return stockModel;
+        }
+
+        public async Task<Stock?> DeleteAsync(int id)
+        {
+            var stockModel = await _context.Stock.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (stockModel == null) 
+            {
+                return null;
+            }
+
+            _context.Stock.Remove(stockModel);  // can't add await for remove() function, remove() is not an async function.
+            await _context.SaveChangesAsync();
+
+            return stockModel;
+        }
+
+        public async Task<List<Stock>> GetAllAsync()
+        {
+            // Adding `.Include(c => c.Comments)` will connect Comments with Stocks in Json returned from API call
+            return await _context.Stock.Include(c => c.Comments).ToListAsync();
+        }
+
+        public async Task<Stock?> GetByIdAsync(int id)
+        {
+            return await _context.Stock.Include(c => c.Comments).FirstOrDefaultAsync(i => i.Id == id);
+        }
+
+        public Task<bool> StockExists(int id)
+        {
+            return _context.Stock.AnyAsync(s => s.Id == id);
+        }
+
+        public async Task<Stock?> UpdateAsync(int id, Stock stockModel)
+        {
+            var existingStock = await _context.Stock.FirstOrDefaultAsync(x => x.Id == id);
+
+            if (existingStock == null)
+            {
+                return null;
+            }
+
+            existingStock.Symbol = stockModel.Symbol;
+            existingStock.CompanyName = stockModel.CompanyName;
+            existingStock.Purchase = stockModel.Purchase;
+            existingStock.LastDiv = stockModel.LastDiv;
+            existingStock.Industry = stockModel.Industry;
+            existingStock.MarketCap = stockModel.MarketCap;
+
+            await _context.SaveChangesAsync();
+            return existingStock;
+        }
+    }
+}
