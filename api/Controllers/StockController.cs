@@ -37,7 +37,7 @@ namespace api.Controllers
             // ToList() method is makiing sure that the stuff returned is not db itself
             // Without ToList(), _context.Stock is returning the database itself.
             var stocks = await _stockRepo.GetAllAsync(query);
-            var stockDto = stocks.Select(s => s.ToStockDto());  // .Select is .Net version of map
+            var stockDto = stocks.Select(s => s.ToStockDto()).ToList();  // .Select is .Net version of map
                                             // Here is going to return an immutable array or any immutable list of this two stock dtos
 
             // only `var stocks = _context.Stock.ToList()` is returning a list of things and it's expecting just a solo stock dto

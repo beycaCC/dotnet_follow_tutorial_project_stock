@@ -47,7 +47,7 @@ namespace api.Repository
         public async Task<List<Stock>> GetAllAsync(QueryObject query)
         {
             // Adding `.Include(c => c.Comments)` will connect Comments with Stocks in Json returned from API call
-            var stocks = _context.Stock.Include(c => c.Comments).AsQueryable();
+            var stocks = _context.Stock.Include(c => c.Comments).ThenInclude(a => a.AppUser).AsQueryable();
 
             // Filtering
             if (!string.IsNullOrWhiteSpace(query.CompanyName))

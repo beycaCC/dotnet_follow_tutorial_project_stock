@@ -16,5 +16,9 @@ namespace api.Models
         public int? StockId { get; set; }
         // Navigation property
         public Stock? Stock { get; set; }
+        
+        // To make one-to-one connection and enable to show the user under each comment in api json output
+        public string AppUserId { get; set; }
+        public AppUser AppUser { get; set; }
     }
 }
