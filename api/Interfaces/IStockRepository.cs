@@ -14,6 +14,7 @@ namespace api.Interfaces
         // Interface allows us to plug in this code and abstract our code away
         Task<List<Stock>> GetAllAsync(QueryObject query);
         Task<Stock?> GetByIdAsync(int id); //FirstOrDefault may returns NULL, so we need ? question mark.
+        Task<Stock?> GetBySymbolAsync(string symbol);
         Task<Stock> CreateAsync(Stock stockModel);
         Task<Stock?> UpdateAsync(int id, Stock stockModel);
         Task<Stock?> DeleteAsync(int id); 

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace api.Models
 {
+    [Table("Stocks")]
     public class Stock
     {
         // ("prop" + tab)
@@ -20,5 +21,6 @@ namespace api.Models
         public long MarketCap { get; set; }  // could be as large as trillion, integer is not long enough
 
         public List<Comment> Comments { get; set; } = new List<Comment>();
+        public List<Portfolio> Portfolios {get;set;} = new List<Portfolio>();
     }
 }

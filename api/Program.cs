@@ -93,6 +93,7 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddScoped<IStockRepository, StockRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IPortfolioRepository, PortfolioRepository>();
 
 // have to put all builder services before build the builder and setup the app.
 var app = builder.Build();

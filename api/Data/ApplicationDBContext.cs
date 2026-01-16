@@ -25,13 +25,27 @@ namespace api.Data
 
         // Need to manupulating the whole entire tables
         public DbSet<Stock> Stock { get; set; } // this will actually create the database for us
-
         public DbSet<Comment> Comments { get; set; }
+        public DbSet<Portfolio> Portfolios { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            base.OnModelCreating(builder);     
+            base.OnModelCreating(builder);
 
+            // Making the connections between join table (portfolio) with stock and user
+            builder.Entity<Portfolio>(x => x.HasKey(p => new {p.AppUserId, p.StockId}));
+            builder.Entity<Portfolio>()
+                .HasOne(u => u.AppUser)
+                .WithMany(u => u.Portfolios)
+                .HasForeignKey(p => p.AppUserId);
+
+            builder.Entity<Portfolio>()
+                .HasOne(u => u.Stock)
+                .WithMany(u => u.Portfolios)
+                .HasForeignKey(p => p.StockId);
+
+
+            // Defining the roles.
             List<IdentityRole> roles = new List<IdentityRole>
             {
                 new IdentityRole

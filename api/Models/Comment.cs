@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace api.Models
 {
+    [Table("Comments")] // define the table name manually, helps especially in many-to-many relationship
     public class Comment
     {
         public int Id { get; set; }
